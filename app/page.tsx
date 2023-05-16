@@ -1,6 +1,3 @@
-import { Editor } from "@tiptap/react";
-import Image from "next/image";
-import RichEditor from "~/components/editor";
 import LexicalEditor from "~/components/lexical-editor";
 
 export default function Home() {
