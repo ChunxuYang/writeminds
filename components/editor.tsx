@@ -2,10 +2,11 @@
 
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import CompleteExtension from "~/extensions/extension-completion";
 
 const RichEditor = () => {
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, CompleteExtension],
     content: `
         <h2>
         Hi there,
