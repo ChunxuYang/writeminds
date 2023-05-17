@@ -40,3 +40,4 @@ next-env.d.ts
 .env.test
 .env.production
 **/.env.local
+**/.env

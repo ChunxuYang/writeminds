@@ -5,6 +5,7 @@ import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { ListItemNode, ListNode } from "@lexical/list";
@@ -17,6 +18,10 @@ import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { TRANSFORMERS } from "@lexical/markdown";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
+import CompletionPlugin from "./plugins/completion-plugin";
+import ToolbarPlugin from "./plugins/toolbar-plugin";
+import { CompletionNode } from "./plugins/custom-nodes/completion-node";
+import TreeViewPlugin from "./plugins/tree-view-plugin";
 
 function onError(error: Error) {
   console.error(error);
@@ -26,7 +31,7 @@ export default function LexicalEditor() {
   const config = {
     namespace: "lexical-editor",
     theme: {
-      root: "prose prose-slate mx-auto lg:prose-lg w-full min-h-full outline-none z-10",
+      root: "prose prose-slate mx-auto lg:prose-lg w-full outline-none z-10",
       link: "cursor-pointer",
       placeholder: "text-gray-400",
       text: {
@@ -49,12 +54,13 @@ export default function LexicalEditor() {
       TableRowNode,
       AutoLinkNode,
       LinkNode,
+      CompletionNode,
     ],
     onError,
   };
 
   return (
-    <div className="relative w-full h-full px-6 py-12 bg-white shadow-xl shadow-slate-700/10 ring-1 ring-gray-900/5 md:max-w-3xl md:mx-auto lg:max-w-4xl lg:pt-16 lg:pb-28 overflow-auto">
+    <div className="relative w-full h-full px-6 py-12 rounded-md bg-white shadow-xl shadow-slate-700/10 ring-1 ring-gray-900/5 md:max-w-3xl md:mx-auto lg:max-w-4xl lg:pt-16 lg:pb-28 overflow-auto">
       <LexicalComposer initialConfig={config}>
         <RichTextPlugin
           contentEditable={<ContentEditable />}
@@ -80,6 +86,12 @@ export default function LexicalEditor() {
         <HistoryPlugin />
         <ListPlugin />
         <LinkPlugin />
+
+        <CompletionPlugin />
+        <TabIndentationPlugin />
+
+        {/* <ToolbarPlugin /> */}
+        {/* <TreeViewPlugin /> */}
       </LexicalComposer>
     </div>
   );
