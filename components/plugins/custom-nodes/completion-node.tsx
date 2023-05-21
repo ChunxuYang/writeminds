@@ -43,6 +43,9 @@ export class CompletionNode extends DecoratorNode<ReactNode> {
     return (
       <div className="inline text-gray-300 select-none pointer-events-none">
         {this.__text}
+        <span className="inline-block rounded-lg border border-gray-300 text-gray-300 px-1 ml-1 text-xs">
+          Tab
+        </span>
       </div>
     );
   }

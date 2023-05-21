@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   const res = await openai.createCompletion({
     model: "text-davinci-003",
     prompt: "This is a new essay beginning: \n" + text,
-    stop: ["\n", ".", "?", "!"],
+    stop: ["\n"],
   });
 
   const completion = res.data.choices[0].text?.trim() || "";

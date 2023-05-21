@@ -43,6 +43,7 @@ export default function CompletionPlugin() {
         editor.update(() => {
           if ($nodesOfType(CompletionNode).length > 0) {
             $nodesOfType(CompletionNode).forEach((node) => {
+              setAborted(true);
               node.remove();
             });
           }
@@ -79,8 +80,14 @@ export default function CompletionPlugin() {
     return res.completion;
   }
 
+  const [aborted, setAborted] = useState(false);
+
   async function triggerCompletion() {
     const completion = await getCompletion();
+    if (aborted) {
+      setAborted(false);
+      return;
+    }
     editor.dispatchCommand(GET_COMPLETION_COMMAND, completion);
   }
 
@@ -92,6 +99,7 @@ export default function CompletionPlugin() {
           // only allow one completion node at a time. If there is already one, remove it.
           if ($nodesOfType(CompletionNode).length > 0) {
             $nodesOfType(CompletionNode).forEach((node) => {
+              setAborted(true);
               node.remove();
             });
           }
@@ -158,9 +166,7 @@ export default function CompletionPlugin() {
             }
           );
 
-          triggerCompletion().then(() => {
-            console.log("completion triggered");
-          });
+          triggerCompletion();
 
           return true;
         },
@@ -168,10 +174,8 @@ export default function CompletionPlugin() {
       ),
       editor.registerCommand(
         INSERT_PARAGRAPH_COMMAND,
-        (payload) => {
-          triggerCompletion().then(() => {
-            console.log("completion triggered");
-          });
+        () => {
+          triggerCompletion();
 
           return false;
         },

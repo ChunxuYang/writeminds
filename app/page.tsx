@@ -1,4 +1,5 @@
 import LexicalEditor from "~/components/lexical-editor";
+import Upload from "~/components/upload";
 
 export default function Home() {
   const uploadImage = async (file: File) => {
@@ -17,6 +18,7 @@ export default function Home() {
       {/* <button className="fixed bottom-0 right-0 m-5 p-5 bg-blue-500 rounded-full">
         upload
       </button> */}
+      <Upload />
     </main>
   );
 }
