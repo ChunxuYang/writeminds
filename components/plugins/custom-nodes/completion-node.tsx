@@ -4,6 +4,7 @@ import {
   NodeKey,
   DecoratorNode,
   LexicalEditor,
+  SerializedLexicalNode,
 } from "lexical";
 import { ReactNode } from "react";
 
@@ -48,6 +49,17 @@ export class CompletionNode extends DecoratorNode<ReactNode> {
         </span>
       </div>
     );
+  }
+
+  exportJSON(): SerializedLexicalNode {
+    return {
+      type: CompletionNode.getType(),
+      version: 1,
+    };
+  }
+
+  static importJSON(json: SerializedLexicalNode): CompletionNode {
+    return new CompletionNode("", false);
   }
 }
 
