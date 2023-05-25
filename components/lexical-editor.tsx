@@ -22,12 +22,18 @@ import CompletionPlugin from "./plugins/completion-plugin";
 import ToolbarPlugin from "./plugins/toolbar-plugin";
 import { CompletionNode } from "./plugins/custom-nodes/completion-node";
 import TreeViewPlugin from "./plugins/tree-view-plugin";
+import SuggestionPlugin from "./plugins/suggestion-plugin";
+import { SuggestionNode } from "./plugins/custom-nodes/suggestion-node";
 
 function onError(error: Error) {
   console.error(error);
 }
 
-export default function LexicalEditor() {
+interface LexicalEditorProps {
+  completionOn?: boolean;
+}
+
+export default function LexicalEditor({ completionOn }: LexicalEditorProps) {
   const config = {
     namespace: "lexical-editor",
     theme: {
@@ -55,6 +61,7 @@ export default function LexicalEditor() {
       AutoLinkNode,
       LinkNode,
       CompletionNode,
+      SuggestionNode,
     ],
     onError,
   };
@@ -87,7 +94,9 @@ export default function LexicalEditor() {
         <ListPlugin />
         <LinkPlugin />
 
-        <CompletionPlugin />
+        {completionOn ? <CompletionPlugin /> : <></>}
+        {/* <CompletionPlugin /> */}
+        <SuggestionPlugin />
         <TabIndentationPlugin />
 
         {/* <ToolbarPlugin /> */}

@@ -6,19 +6,14 @@ import {
   $createTextNode,
   $getRoot,
   $getSelection,
-  $getTextContent,
   $isRangeSelection,
   $nodesOfType,
-  COMMAND_PRIORITY_EDITOR,
   COMMAND_PRIORITY_HIGH,
-  COMMAND_PRIORITY_LOW,
+  COMMAND_PRIORITY_NORMAL,
   INSERT_PARAGRAPH_COMMAND,
-  KEY_ENTER_COMMAND,
   KEY_SPACE_COMMAND,
   KEY_TAB_COMMAND,
   LexicalCommand,
-  ParagraphNode,
-  TextNode,
   createCommand,
 } from "lexical";
 import {
@@ -37,8 +32,6 @@ export default function CompletionPlugin() {
         if (tags.has("add-completion")) {
           return;
         }
-
-        console.log("remove completion listener", tags);
 
         editor.update(() => {
           if ($nodesOfType(CompletionNode).length > 0) {
@@ -69,7 +62,6 @@ export default function CompletionPlugin() {
     const cursorPosition = selection.anchor.offset;
     const prompt = $getRoot().getTextContent().slice(0, cursorPosition);
 
-    console.log($getRoot().getTextContent());
     const res = await fetch("/api", {
       method: "POST",
       body: JSON.stringify({
@@ -170,7 +162,7 @@ export default function CompletionPlugin() {
 
           return true;
         },
-        COMMAND_PRIORITY_HIGH
+        COMMAND_PRIORITY_NORMAL
       ),
       editor.registerCommand(
         INSERT_PARAGRAPH_COMMAND,
