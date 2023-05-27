@@ -53,7 +53,7 @@ export default function Home() {
   };
 
   return (
-    <main className="h-full bg-gray-50 py-8 flex flex-col justify-center relative overflow-hidden lg:py-12">
+    <main className="h-full bg-gray-50 py-8 flex flex-col lg:flex-row justify-center items-center relative overflow-hidden lg:py-12 lg:w-4/5">
       {/* <div className="absolute top-0 left-0 m-8 flex flex-col">
         <div className="flex items-center space-x-2">
           <span
@@ -76,7 +76,7 @@ export default function Home() {
       </div> */}
       <LexicalEditor completionOn={completionOn} />
 
-      <div className="absolute top-0 right-0 m-12 shadow-lg">
+      <div className="fixed top-0 right-0 m-12 shadow-lg">
         <div className="h-full bg-white border border-gray-300 rounded p-4 flex flex-col space-y-6">
           <div>
             <h2 className="text-lg font-semibold">Choose Options</h2>
