@@ -166,8 +166,9 @@ export default function SuggestionPlugin() {
             display: suggestions.length > 0 ? "block" : "none",
           }}
         >
-          {suggestions.map((suggestion) => (
+          {suggestions.map((suggestion, index) => (
             <motion.div
+              key={index}
               layout
               className="rounded bg-white p-2 cursor-pointer hover:bg-gray-200"
               onClick={() => {

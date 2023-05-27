@@ -19,7 +19,7 @@ const getContext = (text: string): Array<ChatCompletionRequestMessage> => {
 };
 
 export async function POST(request: Request) {
-  const { text, choice } = await request.json();
+  const { text } = await request.json();
   const res = await openai.createChatCompletion({
     // model: "text-davinci-003",
     // prompt: "This is a new essay beginning: \n" + text,
