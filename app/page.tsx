@@ -24,7 +24,7 @@ const writingTypeOptions = [
   "Creative",
 ];
 
-const tileFunctions = ["/suggest", "/idea", "/ask", "/inspire"];
+const tileFunctions = ["/suggest", "/idea", "/ask", "/inspire", "^_^ and more coming..."];
 
 export default function Home() {
   // const uploadImage = async (file: File) => {
