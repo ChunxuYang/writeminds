@@ -28,6 +28,7 @@ import { SuggestionNode } from "./plugins/custom-nodes/suggestion-node";
 import IdeaPlugin from "./plugins/idea-plugin";
 import InspirePlugin from "./plugins/inspire-plugin";
 import AskPlugin from "./plugins/ask-plugin";
+import PromptPlugin from "./plugins/prompt-plugin";
 
 function onError(error: Error) {
   console.error(error);
@@ -101,11 +102,13 @@ export default function LexicalEditor({ completionOn }: LexicalEditorProps) {
         {completionOn ? <CompletionPlugin /> : <></>}
         {/* <CompletionPlugin /> */}
         <SuggestionPlugin />
-        <IdeaPlugin /> 
+        <IdeaPlugin />
         <InspirePlugin />
         <AskPlugin />
-        <TabIndentationPlugin />
 
+        <PromptPlugin />
+
+        <TabIndentationPlugin />
 
         {/* <ToolbarPlugin /> */}
         {/* <TreeViewPlugin /> */}
