@@ -1,3 +1,5 @@
+"use client";
+
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useEffect, useState } from "react";
 import { mergeRegister } from "@lexical/utils";

@@ -16,19 +16,23 @@ import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 
 import { TRANSFORMERS } from "@lexical/markdown";
+import dynamic from "next/dynamic";
+
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import CompletionPlugin from "./plugins/completion-plugin";
-import ToolbarPlugin from "./plugins/toolbar-plugin";
 import { CompletionNode } from "./plugins/custom-nodes/completion-node";
-import TreeViewPlugin from "./plugins/tree-view-plugin";
 import SuggestionPlugin from "./plugins/suggestion-plugin";
 import { SuggestionNode } from "./plugins/custom-nodes/suggestion-node";
 //import functions
 import IdeaPlugin from "./plugins/idea-plugin";
 import InspirePlugin from "./plugins/inspire-plugin";
 import AskPlugin from "./plugins/ask-plugin";
-import PromptPlugin from "./plugins/prompt-plugin";
+// import PromptPlugin from "./plugins/prompt-plugin";
+
+const PromptPlugin = dynamic(() => import("./plugins/prompt-plugin"), {
+  ssr: false,
+});
 
 function onError(error: Error) {
   console.error(error);

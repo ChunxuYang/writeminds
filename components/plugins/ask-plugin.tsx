@@ -1,3 +1,5 @@
+"use client";
+
 import {
   $createNodeSelection,
   $getNodeByKey,
@@ -11,7 +13,7 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import { useState, useEffect } from "react";
 import { Button, Input, Modal, Loading } from "@nextui-org/react";
 import { mergeRegister } from "@lexical/utils";
-import { $getRoot } from 'lexical';
+import { $getRoot } from "lexical";
 import { motion } from "framer-motion";
 
 export const GET_ASK_COMMAND = createCommand();
@@ -91,7 +93,12 @@ export default function AskPlugin() {
           size="md"
           contentRight={
             askLoading ? (
-              <Loading type="points" color="primary" size="sm" className="mr-2" />
+              <Loading
+                type="points"
+                color="primary"
+                size="sm"
+                className="mr-2"
+              />
             ) : (
               <motion.button
                 className="rounded-full bg-primary p-[5px] mr-2 cursor-pointer text-white z-50"
