@@ -1,7 +1,7 @@
 "use client";
 
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { mergeRegister } from "@lexical/utils";
 
 import {
@@ -23,10 +23,17 @@ import {
   CompletionNode,
 } from "~/components/plugins/custom-nodes/completion-node";
 
+let requestTime = "";
+function setRequestTime(time: string) {
+  requestTime = time;
+}
+
 export const GET_COMPLETION_COMMAND: LexicalCommand<string> = createCommand();
 
-export default function CompletionPlugin() {
+function CompletionPlugin() {
   const [editor] = useLexicalComposerContext();
+  // const [requestTime, setRequestTime] = useState<string>("");
+  console.log("rendering");
 
   useEffect(() => {
     const removeCompletionListener = editor.registerUpdateListener(
@@ -36,9 +43,12 @@ export default function CompletionPlugin() {
         }
 
         editor.update(() => {
+          console.log("removing");
+          setRequestTime("");
+
           if ($nodesOfType(CompletionNode).length > 0) {
             $nodesOfType(CompletionNode).forEach((node) => {
-              setAborted(true);
+              // setAborted(true);
               node.remove();
             });
           }
@@ -74,12 +84,14 @@ export default function CompletionPlugin() {
     return res.completion;
   }
 
-  const [aborted, setAborted] = useState(false);
-
   async function triggerCompletion() {
+    const rt = Date.now().toString();
+    console.log(rt);
+    setRequestTime(rt);
+    console.log(requestTime);
     const completion = await getCompletion();
-    if (aborted) {
-      setAborted(false);
+    if (rt !== requestTime) {
+      console.log(requestTime, "aborted");
       return;
     }
     editor.dispatchCommand(GET_COMPLETION_COMMAND, completion);
@@ -92,8 +104,9 @@ export default function CompletionPlugin() {
         (completionText) => {
           // only allow one completion node at a time. If there is already one, remove it.
           if ($nodesOfType(CompletionNode).length > 0) {
+            console.log("removing");
+            setRequestTime("");
             $nodesOfType(CompletionNode).forEach((node) => {
-              setAborted(true);
               node.remove();
             });
           }
@@ -180,3 +193,5 @@ export default function CompletionPlugin() {
 
   return null;
 }
+
+export default memo(CompletionPlugin);
