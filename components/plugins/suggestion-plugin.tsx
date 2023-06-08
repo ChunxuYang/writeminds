@@ -1,30 +1,18 @@
 "use client";
 import {
-  $createNodeSelection,
-  $createRangeSelection,
-  $createTextNode,
-  $getNodeByKey,
   $getRoot,
   $getSelection,
   $isRangeSelection,
-  $nodesOfType,
-  $setSelection,
   COMMAND_PRIORITY_HIGH,
-  INSERT_PARAGRAPH_COMMAND,
-  KEY_SPACE_COMMAND,
-  KEY_TAB_COMMAND,
   LexicalCommand,
-  RangeSelection,
-  TextNode,
   createCommand,
 } from "lexical";
 import { AiFillRobot } from "react-icons/ai";
 
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useEffect, useState } from "react";
-import { Button, Input, Modal, Loading } from "@nextui-org/react";
+import { Input, Modal, Loading } from "@nextui-org/react";
 import { mergeRegister } from "@lexical/utils";
-import { $createSuggestionNode } from "~/components/plugins/custom-nodes/suggestion-node";
 import { motion } from "framer-motion";
 
 export const GET_SUGGESTION_COMMAND: LexicalCommand<string> = createCommand();
@@ -36,8 +24,6 @@ export default function SuggestionPlugin() {
   const [editor] = useLexicalComposerContext();
   const [modalOpen, setModalOpen] = useState(false);
   const [suggestionLoading, setSuggestionLoading] = useState(false);
-
-  const [currentTextNodeKey, setCurrentTextNodeKey] = useState("");
 
   const [question, setQuestion] = useState("");
 
@@ -59,26 +45,6 @@ export default function SuggestionPlugin() {
 
   useEffect(() => {
     return mergeRegister(
-      editor.registerNodeTransform(TextNode, (node) => {
-        if (node.__text.endsWith(trigger_command)) {
-          editor.update(() => {
-            node.spliceText(
-              node.__text.length - trigger_command.length,
-              node.__text.length,
-              " "
-            );
-
-            setCurrentTextNodeKey(node.__key);
-
-            setModalOpen(true);
-
-            return true;
-          });
-        }
-
-        return true;
-      }),
-
       editor.registerCommand<string>(
         GET_SUGGESTION_COMMAND,
         () => {
@@ -200,17 +166,14 @@ export default function SuggestionPlugin() {
                 } else {
                   editor.update(() => {
                     // add the suggestion to cursor position
-                    const currentNode = $getNodeByKey(currentTextNodeKey);
 
-                    if (!currentNode) return;
+                    const selection = $getSelection();
 
-                    currentNode.spliceText(
-                      currentNode.__text.length,
-                      currentNode.__text.length,
-                      suggestion
-                    );
+                    if (!$isRangeSelection(selection)) {
+                      return false;
+                    }
 
-                    // close the modal
+                    selection.insertText(suggestion);
                     closeHandler();
                   });
                 }

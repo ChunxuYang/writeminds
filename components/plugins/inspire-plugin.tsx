@@ -1,29 +1,18 @@
 "use client";
 
 import {
-  $createNodeSelection,
-  $createRangeSelection,
-  $createTextNode,
-  $getNodeByKey,
   $getRoot,
   $getSelection,
   $isRangeSelection,
-  $nodesOfType,
-  $setSelection,
   COMMAND_PRIORITY_HIGH,
-  INSERT_PARAGRAPH_COMMAND,
-  KEY_SPACE_COMMAND,
-  KEY_TAB_COMMAND,
   LexicalCommand,
-  RangeSelection,
-  TextNode,
   createCommand,
 } from "lexical";
 import { AiFillBulb } from "react-icons/ai";
 
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useEffect, useState } from "react";
-import { Button, Input, Modal, Loading } from "@nextui-org/react";
+import { Input, Modal, Loading } from "@nextui-org/react";
 import { mergeRegister } from "@lexical/utils";
 //import { $createInspirationNode } from "~/components/plugins/custom-nodes/inspiration-node";
 import { motion } from "framer-motion";
@@ -37,8 +26,6 @@ export default function InspirationPlugin() {
   const [editor] = useLexicalComposerContext();
   const [modalOpen, setModalOpen] = useState(false);
   const [inspirationLoading, setInspirationLoading] = useState(false);
-
-  const [currentTextNodeKey, setCurrentTextNodeKey] = useState("");
 
   const [question, setQuestion] = useState("");
 
@@ -60,26 +47,6 @@ export default function InspirationPlugin() {
 
   useEffect(() => {
     return mergeRegister(
-      editor.registerNodeTransform(TextNode, (node) => {
-        if (node.__text.endsWith(trigger_command)) {
-          editor.update(() => {
-            node.spliceText(
-              node.__text.length - trigger_command.length,
-              node.__text.length,
-              " "
-            );
-
-            setCurrentTextNodeKey(node.__key);
-
-            setModalOpen(true);
-
-            return true;
-          });
-        }
-
-        return true;
-      }),
-
       editor.registerCommand<string>(
         GET_INSPIRATION_COMMAND,
         () => {
@@ -192,16 +159,13 @@ export default function InspirationPlugin() {
                     });
                 } else {
                   editor.update(() => {
-                    const currentNode = $getNodeByKey(currentTextNodeKey);
+                    const selection = $getSelection();
 
-                    if (!currentNode) return;
+                    if (!$isRangeSelection(selection)) {
+                      return false;
+                    }
 
-                    currentNode.spliceText(
-                      currentNode.__text.length,
-                      currentNode.__text.length,
-                      inspiration
-                    );
-
+                    selection.insertText(inspiration);
                     closeHandler();
                   });
                 }

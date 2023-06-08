@@ -1,17 +1,15 @@
 "use client";
 
 import {
-  $createNodeSelection,
-  $getNodeByKey,
-  $setSelection,
   createCommand,
-  TextNode,
   COMMAND_PRIORITY_HIGH,
+  $getSelection,
+  $isRangeSelection,
 } from "lexical";
 import { AiFillRobot } from "react-icons/ai";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useState, useEffect } from "react";
-import { Button, Input, Modal, Loading } from "@nextui-org/react";
+import { Input, Modal, Loading } from "@nextui-org/react";
 import { mergeRegister } from "@lexical/utils";
 import { $getRoot } from "lexical";
 import { motion } from "framer-motion";
@@ -29,7 +27,7 @@ export default function AskPlugin() {
   const [editor] = useLexicalComposerContext();
   const [modalOpen, setModalOpen] = useState(false);
   const [askLoading, setAskLoading] = useState(false);
-  const [currentTextNodeKey, setCurrentTextNodeKey] = useState("");
+  // const [currentTextNodeKey, setCurrentTextNodeKey] = useState("");
   const [totalContent, setTotalContent] = useState("");
   const [asks, setAsks] = useState<AskItem[]>([]);
   const [question, setQuestion] = useState("");
@@ -45,26 +43,6 @@ export default function AskPlugin() {
 
   useEffect(() => {
     return mergeRegister(
-      editor.registerNodeTransform(TextNode, (node) => {
-        if (node.__text.endsWith(trigger_command)) {
-          editor.update(() => {
-            node.spliceText(
-              node.__text.length - trigger_command.length,
-              node.__text.length,
-              " "
-            );
-
-            setCurrentTextNodeKey(node.__key);
-
-            setModalOpen(true);
-
-            return true;
-          });
-        }
-
-        return true;
-      }),
-
       editor.registerCommand(
         GET_ASK_COMMAND,
         () => {
@@ -152,13 +130,13 @@ export default function AskPlugin() {
                 className="rounded bg-white p-2 cursor-pointer hover:bg-gray-200"
                 onClick={() => {
                   editor.update(() => {
-                    const currentNode = $getNodeByKey(currentTextNodeKey);
-                    if (!currentNode) return;
-                    currentNode.spliceText(
-                      currentNode.__text.length,
-                      currentNode.__text.length,
-                      "\n" + ask.answer
-                    );
+                    const selection = $getSelection();
+
+                    if (!$isRangeSelection(selection)) {
+                      return false;
+                    }
+
+                    selection.insertText(ask.answer);
                     closeHandler();
                   });
                 }}
