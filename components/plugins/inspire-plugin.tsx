@@ -72,6 +72,9 @@ export default function InspirationPlugin() {
           className="rounded"
           clearable
           contentRightStyling={false}
+          onChange={(e) => {
+            setQuestion(e.target.value);
+          }}
           size="md"
           contentRight={
             inspirationLoading ? (
@@ -99,6 +102,7 @@ export default function InspirationPlugin() {
                       },
                       body: JSON.stringify({
                         text: allContent,
+                        question: question,
                       }),
                     })
                       .then((res) => res.json())
@@ -145,6 +149,7 @@ export default function InspirationPlugin() {
                     body: JSON.stringify({
                       text: totalContent,
                       choice: inspiration,
+                      question: question,
                     }),
                   })
                     .then((res) => res.json())

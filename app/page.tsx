@@ -43,7 +43,7 @@ export default function Home() {
   //   const data = await res.json();
   //   return data.url;
   // };
-  const [completionOn, setCompletionOn] = useState(true);
+  const [completionOn, setCompletionOn] = useState(false);
 
   const [dropdownValues, setDropdownValues] = useState({
     dropdown1: audienceKnowledgeOptions[2],

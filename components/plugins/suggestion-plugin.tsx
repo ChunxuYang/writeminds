@@ -73,6 +73,9 @@ export default function SuggestionPlugin() {
           clearable
           contentRightStyling={false}
           size="md"
+          onChange={(e) => {
+            setQuestion(e.target.value);
+          }}
           contentRight={
             suggestionLoading ? (
               <Loading
@@ -99,6 +102,7 @@ export default function SuggestionPlugin() {
                       },
                       body: JSON.stringify({
                         text: allContent,
+                        question: question,
                       }),
                     })
                       .then((res) => res.json())
@@ -150,6 +154,7 @@ export default function SuggestionPlugin() {
                     body: JSON.stringify({
                       text: totalContent,
                       choice: suggestion,
+                      question: question,
                     }),
                   })
                     .then((res) => res.json())

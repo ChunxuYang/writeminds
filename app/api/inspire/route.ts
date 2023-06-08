@@ -7,11 +7,14 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-const getContext = (text: string): Array<ChatCompletionRequestMessage> => {
+const getContext = (
+  text: string,
+  question: string
+): Array<ChatCompletionRequestMessage> => {
   const context: Array<ChatCompletionRequestMessage> = [
     {
       role: "user",
-      content: `This is my essay now: ${text} \n\n, I want to know related writing samples to inspire me, return me 2 - 3 new writing samples related to my current essay. \n return should be consise, each containing around 4- 5 sentences. and end with ellipsis \n return example:
+      content: `This is my essay now: ${text} \n\n, I want to know related writing samples to inspire me, return me 2 - 3 new writing samples related to my current essay and ${question}. \n return should be consise, each containing around 4- 5 sentences. and each end with ellipsis \n return should be a string in below format:
                 Sample 1: xxxx... | Sample 2: yyyy... | Sample 3: zzzz...`,
     },
   ];
@@ -19,13 +22,13 @@ const getContext = (text: string): Array<ChatCompletionRequestMessage> => {
 };
 
 export async function POST(request: Request) {
-  const { text } = await request.json();
+  const { text, question } = await request.json();
   const res = await openai.createChatCompletion({
     // model: "text-davinci-003",
     // prompt: "This is a new essay beginning: \n" + text,
     // stop: ["\n"],
     model: "gpt-3.5-turbo",
-    messages: getContext(text),
+    messages: getContext(text, question),
   });
 
   const message = res.data.choices[0].message?.content;
@@ -36,10 +39,10 @@ export async function POST(request: Request) {
 
   // message like: Talk about xxxx | Talk about yyyy | Talk about zzzz
   const messages = message
-  .split("...")
-  .map((m) => m.trim())
-  .filter(Boolean)
-  .map((m) => m + "...");
+    .split("...")
+    .map((m) => m.trim())
+    .filter(Boolean)
+    .map((m) => m + "...");
 
   return NextResponse.json(messages);
 }

@@ -7,25 +7,28 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-const getContext = (text: string): Array<ChatCompletionRequestMessage> => {
+const getContext = (
+  text: string,
+  question: string
+): Array<ChatCompletionRequestMessage> => {
   const context: Array<ChatCompletionRequestMessage> = [
     {
       role: "user",
-      content: `This is my essay now: ${text} \n\n, I want to know how to brainstorm it, return me 2 - 3 new ideas based on my current essay and end with ellipsis.\n return should be consise, each containing below 5-10 words. \n return example:
-                Idea 1: xxxx | Idea 2: yyyy | Idea 3: zzzz.`,
+      content: `This is my essay now: ${text} \n\n, I want to know how to brainstorm it, return me 2 - 3 new ideas based on my current essay and the question ${question} and end with ellipsis.\n return should be consise, each containing below 5-10 words. \n return should be a string in below format:
+                Idea 1: xxxx... | Idea 2: yyyy... | Idea 3: zzzz...`,
     },
   ];
   return context;
 };
 
 export async function POST(request: Request) {
-  const { text } = await request.json();
+  const { text, question } = await request.json();
   const res = await openai.createChatCompletion({
     // model: "text-davinci-003",
     // prompt: "This is a new essay beginning: \n" + text,
     // stop: ["\n"],
     model: "gpt-3.5-turbo",
-    messages: getContext(text),
+    messages: getContext(text, question),
   });
 
   const message = res.data.choices[0].message?.content;
@@ -35,7 +38,10 @@ export async function POST(request: Request) {
   }
 
   // message like: Talk about xxxx | Talk about yyyy | Talk about zzzz
-  const messages = message.split("...").map((m) => m.trim()).filter((m) => m !== "");
+  const messages = message
+    .split("|")
+    .map((m) => m.trim())
+    .filter((m) => m !== "");
 
   return NextResponse.json(messages);
 }
